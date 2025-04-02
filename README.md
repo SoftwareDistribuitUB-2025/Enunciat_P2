@@ -61,11 +61,11 @@ Es treballarà de la mateixa manera que a la Pràctica 1, utilitzant un reposito
 
 # Calendari
 
-| Sessió | Data              | Tema                                  | Guia                             | Enllaços                                                                    |
-| ------ | ----------------- | ------------------------------------- | -------------------------------- | --------------------------------------------------------------------------- |
-| 1      | 02/04/25          | Desplegament local backend i frontend | [Sessió 1](Sessions/Sessio_1.md) | [Intro to Vue](Guies/inici_Vue.md) [Intro to Django](Guies/inici_DJango.md) |
-| 2      | 23/04/25-30/04/25 | Backend i base de dades               |                                  |                                                                             |
-| 3      | 07/05/25          | **Qüestionari 2** i Frontend          |                                  |                                                                             |
-| 4      | 14/05/25          | Autenticació i autorització           |                                  |                                                                             |
-| 5      | 21/05/25          | Taula de lideratge                    |                                  |                                                                             |
-| 6      | 28/05/25          | Sessió de Testing                     |                                  |                                                                             |
+| Sessió | Data              | Tema                                  | Guia                             | Enllaços                                                                  |
+| ------ | ----------------- | ------------------------------------- | -------------------------------- |---------------------------------------------------------------------------|
+| 1      | 02/04/25          | Desplegament local backend i frontend | [Sessió 1](Sessions/Sessio_1.md) | [Intro a Vue](Guies/inici_Vue.md) [Intro a Django](Guies/inici_DJango.md) |
+| 2      | 23/04/25-30/04/25 | Backend i base de dades               |                                  |                                                                           |
+| 3      | 07/05/25          | **Qüestionari 2** i Frontend          |                                  |                                                                           |
+| 4      | 14/05/25          | Autenticació i autorització           |                                  |                                                                           |
+| 5      | 21/05/25          | Taula de lideratge                    |                                  |                                                                           |
+| 6      | 28/05/25          | Sessió de Testing                     |                                  |                                                                           |
