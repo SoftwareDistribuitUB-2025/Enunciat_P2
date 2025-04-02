@@ -92,6 +92,26 @@ amb la comanda:
 python manage.py migrate
 ```
 
+Si la comanda ha funcionat correctament, hauríeu de veure que s'ha creat un nou fitxer ```db.sqlite3```, que conté la base de dades [SQLite](https://www.sqlite.org/).
+El nom del fitxer i el tipus de base de dades estan definits en la següent porció del fitxer ```settings.py```:
+
+```python
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Database
+# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+```
+
 ### Iniciar el servidor
 
 Un cop tenim la base de dades creada, ja podem comprovar que el nostre servidor funciona. Per arrancar el servidor,
@@ -100,9 +120,196 @@ cal executar la comanda:
 python manage.py runserver
 ```
 
-Si tot ha anat bé, haurieu de poder accedir amb un navegador a l'adreça 
-[http://127.0.0.1:8000/](http://127.0.0.1:8000/), i veure la pàgina inicial de DJango.
+Si tot ha anat bé, hauríeu de poder accedir amb un navegador a l'adreça [http://127.0.0.1:8000/](http://127.0.0.1:8000/), i veure la pàgina inicial de DJango.
+
+## Afegir noves rutes a l'aplicació
+Un altre fitxer important del projecte DJango és el fitxer de rutes ```urls.py```. En aquest fitxer es fa una declaració de les URL amb les funcionalitats del backend (normalment vistes).
+A continuació veurem rutes útils de cara a l'aplicació.
+
+### Administració de l'aplicació
+Fixem-nos en el següent contingut del fitxer ```urls.py```:
+```python
+from django.contrib import admin
+from django.urls import path
+urlpatterns = [
+    path('admin/', admin.site.urls),
+]
+```
+
+El que estem fent és vincular la ruta ```admin/``` amb ```admin.site.urls```, que defineix un seguit de rutes per a la part d'administració de DJango.
+A partir d'aquest moment, podem accedir a la part d'administració de la nostra aplicació amb aquesta ruta:
+
+[http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+
+Fixeu-vos que la ruta s'afegeix a l'URL. Haurieu de poder veure una captura d'aquest estil:
+
+<figure>
+  <img
+  src="../images/django_admin_login.png"
+  alt="Login DJango Admin.">
+  <figcaption>Vista d'autenticació de l'administrador de DJango</figcaption>
+</figure>
+
+Per defecte, **només els administradors** de l'aplicació poden accedir a la part d'administració. Per crear un administrador ho podem fer
+amb la comanda:
+```bash
+python manage.py createsuperuser
+```
+
+Se'ns demanarà les dades de l'administrador, entre elles l'usuari i la contrasenya. Si utilitzem aquestes credencials veurem el següent contingut:
+<figure>
+  <img
+  src="../images/django_admin.png"
+  alt="DJango Admin.">
+  <figcaption>Vista de l'administrador de DJango</figcaption>
+</figure>
+
+Si ens fixem bé, tenim dos models que ens venen donats, el dels usuaris (**User**) i el dels grups d'usuaris (**Group**). Si
+entrem a la d'usuaris veurem que ens apareix l'usuari administrador que acabem de crear.
+
+### Documentació de l'API
+
+El mòdul ```drf_spectacular``` que hem instal·lat i activat anteriorment ens permet visualitzar l'ajuda de l'API de forma
+automàtica, seguint un format estàndard anomenat [OpenAPI](https://www.openapis.org/), i visualitzant-lo amb l'eina **Swagger**.
+Per fer-ho, primer afegirem les següents configuracions al final del fitxer ```settings.py```:
+```python
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Battleship API',
+    'DESCRIPTION': 'Battleship API',
+    'VERSION': '1.0.0',
+    # include schema endpoint into schema
+    'SERVE_INCLUDE_SCHEMA': True,
+    # A regex specifying the common denominator for all operation paths. If
+    # SCHEMA_PATH_PREFIX is set to None, drf-spectacular will attempt to estimate
+    # a common prefix. Use '' to disable.
+    # Mainly used for tag extraction, where paths like '/api/v1/albums' with
+    # a SCHEMA_PATH_PREFIX regex '/api/v[0-9]' would yield the tag 'albums'.
+    'SCHEMA_PATH_PREFIX': '/api/v[0-9]'
+    # OTHER SETTINGS
+}
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+```
+
+Ara registrarem dues noves **URL** a la nostra aplicació, dins el fitxer ```urls.py```:
+
+```python
+from django.contrib import admin
+from django.urls import path
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("docs/", SpectacularSwaggerView.as_view(url_name="schema"),name="swagger-ui"),
+]
+```
+El primer que fem és afegir la url ```schema/``` per accedir a l'esquema OpenAPI de la nostra API. Després registrem una segona
+url ```docs/``` que visualitzarà gràficament aquest esquema amb Swagger.
+
+Ara ja podem visualitzar l'ajuda de la nostra aplicació anant a la url de documentació:
+
+[http://127.0.0.1:8000/docs/](http://127.0.0.1:8000/docs/)
+
+Haurieu de poder veure una vista d'aquest estil:
+
+<figure>
+  <img
+  src="../images/django_swagger1.png"
+  alt="Vista de la documentació Swagger.">
+  <figcaption>Vista de la documentació Swagger</figcaption>
+</figure>
+
+Fixeu-vos en la relació entre la configuració i el que es veu, en concret amb el títol, versions, etc...
 
 
-## Afegir una nova aplicació
-Un cop tenim la nostra aplicació bàsica funcionant, ara 
+### Afegir funcionalitats a l'API
+
+Finalment, anem a veure com afegir una nova funcionalitat a la nostra API. En aquest cas, utilitzarem el mòdul ```rest_framework``` 
+que hem instal·lat i activat anteriorment. Quan hem configurat la documentació ja hem inclòs una configuració inicial
+per aquest mòdul, per tant, per ara no necessitem configurar res més.
+
+Hem vist anteriorment que per defecte ja tenim el model d'usuaris (**User**), i com podem accedir-hi utilitzant la part d'administració del DJango.
+Ara el que farem serà afegir a l'API les funcionalitats de llistar els usuaris existents i veure les dades d'un usuari en particular.
+
+Per fer-ho, necessitem fer dos passos. Primer definirem com passarem d'un model a una representació que puguem enviar, per exemple JSON o XML. Crea un fitxer ```serializers.py``` amb el següent contingut:
+```python
+from django.contrib.auth.models import User
+from rest_framework import serializers
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+```
+En aquest fitxer definint un serialitzador **UserSerializer** que donat una instància de **User** en mostra tots els seus camps (fields). 
+Ara crearem una **Vista de Model** [ModelViewSet](https://www.django-rest-framework.org/tutorial/6-viewsets-and-routers/), que ens permetrà interactuar amb un model de l'aplicació (en aquest cas **User**). Creem un nou fitxer ```views.py```:
+
+```python
+from rest_framework import viewsets
+from django.contrib.auth.models import User
+from . import serializers
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):    
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
+```
+
+Simplement, li direm que aquesta vista, que limitarem a només lectura utilitzant **ReadOnlyModelViewSet** retornarà tots els objectes de tipus **User**, i que la informació la mostrarà amb el serialitzador anterior.
+Per connectar aquesta vista amb l'aplicació, caldrà tornar definir les rutes pertinents al fitxer ```urls.py```. En aquest cas, en comptes de posar una ruta
+directament, utilitzarem els enrutadors del mòdul ```rest_framework```, que ens ho faciliten. Fixeu-vos com quedaría el fitxer ```urls.py```:
+
+```python
+from django.contrib import admin
+from django.urls import path, include
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from rest_framework.routers import DefaultRouter
+from . import views
+
+# Create a router and register our ViewSets with it.
+router = DefaultRouter()
+
+router.register(r'user', views.UserViewSet, basename='user')
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("docs/", SpectacularSwaggerView.as_view(url_name="schema"),name="swagger-ui"),
+    path("api/v1/", include(router.urls)),
+]
+```
+
+En l'enrutador (router) vinculem la nova vista UserViewSet amb la url ```user```, i posteriorment, indiquem que tot el
+que estigui definit dins aquest enrutador ho accedirem a partir de la ruta ```api/v1/```. Per tant, veurem que aquesta 
+nova vista ens queda mapejada a la URL ```api/v1/user/```.
+
+Anem a comprovar que la pàgina de documentació ens mostra aquesta nova funcionalitat:
+<figure>
+  <img
+  src="../images/django_swagger2.png"
+  alt="Vista de la documentació Swagger.">
+  <figcaption>Vista de la documentació Swagger</figcaption>
+</figure>
+
+Podem accedir a la llista d'usuaris navegant a l'adreça [http://127.0.0.1:8000/api/v1/user/](http://127.0.0.1:8000/api/v1/user/):
+
+<figure>
+  <img
+  src="../images/django_user_list.png"
+  alt="Llistat d'usuaris.">
+  <figcaption>Llistat d'usuaris.</figcaption>
+</figure>
+
+I a un usuari en concret, afegint el seu identificador al final [http://127.0.0.1:8000/api/v1/user/1/](http://127.0.0.1:8000/api/v1/user/1/)
+
+<figure>
+  <img
+  src="../images/django_user_instance.png"
+  alt="Visualització d'un sol usuari.">
+  <figcaption>Visualització d'un sol usuari.</figcaption>
+</figure>
