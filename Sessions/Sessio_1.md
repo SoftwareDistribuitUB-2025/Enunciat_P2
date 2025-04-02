@@ -53,7 +53,7 @@ sincronitzada amb els models. Aquestes migracions les haurem d'aplicar finalment
 
 ## Exercici 1
 
-Segueix les indicacions de la guia d'introducció a Vue per tal de crear un projecte Vue des de zero i executar-lo.
+Segueix les indicacions de la guia d'[introducció a Vue](../Guies/inici_Vue_en.md) per tal de crear un projecte Vue des de zero i executar-lo.
 
 ## Exercici 2
 
