@@ -1,4 +1,4 @@
---
+---
 author: Xevi Baró, Kaisar Kushibar, Eloi Puertas
 date: Abril 2024
 title: Pràctica 2 - FastAPI and Vue application (Software distribuït)
