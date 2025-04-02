@@ -22,7 +22,7 @@ instal·lada i esteu familiaritzats amb la instal·lació de paquets mitjançant
 Tingueu en compte que `la comanda pip` mostrada en aquest tutorial correspondrà a `pip3` segons quantes versions diferents de python tingueu
 instal·lat al vostre ordinador.
 
-Es recomana altament l'ús de la IDE [PyCharm Professional](https://www.jetbrains.com/pycharm/) per al desenvolupament d'aquesta pràctica. Si no el teniu instal·lat, existeix una versiñó per a estudiants que podeu obtenir si us enregistreu amb el correu de la UB.
+Es recomana altament l'ús de la IDE [PyCharm Professional](https://www.jetbrains.com/pycharm/) per al desenvolupament d'aquesta pràctica. Si no el teniu instal·lat, existeix una versió per a estudiants que podeu obtenir si us registreu amb el correu de la UB.
 
 ## Enviament dels Exercicis
 
