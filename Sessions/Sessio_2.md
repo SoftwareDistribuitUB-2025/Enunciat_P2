@@ -1,4 +1,4 @@
-# Sessió 1
+# Sessió 2
 
 En aquesta sessió veurem les tecnologíes bàsiques amb les que treballarem durant aquesta pràctica.
 
@@ -86,12 +86,78 @@ erDiagram
     }
 ```
 
-🧱 Step 1: Define Your Models
-Inside models.py:
+### API
 
-python
-Copia
-Modifica
+Tota la gestió de les dades es farà utilitzant l'API RESTful, seguint com a base la següent estructura (**podeu afegir** mètodes addicionals):
+
+
+| Mètode | URL                                                 | Descripció                   |
+| ------ | --------------------------------------------------- | ---------------------------- |
+| GET    | `/api/v1/games/`                                    | Llistat de partides          |
+| POST   | `/api/v1/games/`                                    | Crear una partida            |
+| GET    | `/api/v1/games/{id}/`                               | Veure la informació d'una partida        |
+| PUT    | `/api/v1/games/{id}/`                               | Modificar la informació d'una partida    |
+| PATCH  | `/api/v1/games/{id}/`                               | Modificar la informació d'una partida    |
+| DELETE | `/api/v1/games/{id}/`                               | Eliminar una partida         |
+| GET    | `/api/v1/games/{id}/players/`                       | Llistat de jugadors en una partida    |
+| POST   | `/api/v1/games/{id}/players/`                       | Afegeix un jugador a una partida      |
+| GET    | `/api/v1/games/{gid}/players/{pid}/`                | Veure les dades d'un jugador de la partida     |
+| DELETE | `/api/v1/games/{gid}/players/{pid}/`                | Eliminar un jugador de la partida   |
+| GET    | `/api/v1/games/{gid}/players/{pid}/vessels/`        | Veure els vaixells d'un usuari a la partida     |
+| POST   | `/api/v1/games/{gid}/players/{pid}/vessels/`        | Afegir un vaixell per a un usuari i partida     |
+| GET    | `/api/v1/games/{gid}/players/{pid}/vessels/{vid}/`  | Veure la informació d'un vaixell per a un jugador i partida   |
+| PUT    | `/api/v1/games/{gid}/players/{pid}/vessels/{vid}/`  | Modificar la ubicació d'un vaixell per a un jugador i partida   |
+| PATCH  | `/api/v1/games/{gid}/players/{pid}/vessels/{vid}/`  | Modificar la ubicació d'un vaixell per a un jugador i partida   |
+| DELETE | `/api/v1/games/{gid}/players/{pid}/vessels/{vid}/`  | Eliminar un vaixell del tauler d'un jugador per a una partida   |
+| GET    | `/api/v1/games/{gid}/players/{pid}/shots/`          | Veure les jugades fetes per un jugador a una partida    |
+| POST   | `/api/v1/games/{gid}/players/{pid}/shots/`          | Fer una nova jugada d'un jugador a una partida     |
+| GET    | `/api/v1/games/{gid}/players/{pid}/shots/{sid}/`    | Veure la informació d'una jugada per a un jugador i partida   |
+| GET    | `/api/v1/games/{gid}/players/{pid}/boards/`         | Veure els taulers de joc per a un jugador i partida     |
+| GET    | `/api/v1/games/{gid}/players/{pid}/boards/{bid}/`   | Veure un taulers de joc per a un jugador i partida     |
+
+
+El cos dels missatges i els tipus de retorn els heu de decidir vosaltres, i han de quedar recollits a l'ajuda de la API i a la **memòria**.
+
+**Nota:** En aquest moment l'API ens permetrà realitzar totes les accions independentment de si estem autenticats i no, i de l'usuari que siguem. Més endavant ens centrarem en la part d'autenticació i autorització.
+
+
+## Tasques dins del laboratori
+
+### Exercici 1
+
+Segueix el següent enllaç a **Github Classroom** i descarrega't el codi per a la pràctica 2.
+
+- [https://classroom.github.com/a/diHjdyim](https://classroom.github.com/a/diHjdyim)
+
+Veureu que teniu dues carpetes:
+
+- **frontend**: Versió inicial del frontend. Aquest codi parteix d'una versió similar a la obtinguda en els exercicis de la sessió anterior, però inclou alguns components ja implementats.
+
+- **backend**: Versió inicial del backend. Aquest codi parteix d'una versió similar a la obtinguda en els exercicis de la sessió anterior, però inclou alguns paquests i configuracions inicials.
+
+
+Executa els dos codis igual que es va fer a la sessió anterior.
+
+
+### Exercici 2
+
+Obre el codi del **backend** i revisa'n l'estructura. Fixa't que hi ha una carpeta ***api**. Aqui és on volem posar tota la part relativa a la API del backend. En concret, identifica la següent estructura:
+
+| Component        | Finalitat                                     |
+| ---------------- | --------------------------------------------- |
+| `models.py`      | Defineix l'esquema de la base de dades        |
+| `migrations`     | Paquet on es creen les migracions de dades    |
+| `serializers.py` | Traducció models <-> dades en JSON            |
+| `views.py`       | Defineix les vistes, que implementen la lògica de l'API             |
+| `urls.py`        | Assigna rutes de l'API a les diferents vistes |
+| `signals.py`     | Registre de senyals/events  |
+
+
+### Exercici 3
+
+El primer que volem fer és definir els models corresponents a **Player** i **Game**, tal com els hem vist representats en el model de dades anterior. Per fer-ho, obre el fitxer de models ```models.py``` dins de la carpeta **api**, i afegeix el següent contingut:
+
+```python
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -120,14 +186,60 @@ class Game(models.Model):
     phase = models.CharField(max_length=15, choices=PHASE_CHOICES.items(), default=PHASE_WAITING)
     winner = models.ForeignKey(Player, related_name="winner", on_delete=models.SET_NULL, blank=True, null=True)
     owner = models.ForeignKey(Player, related_name="owner", on_delete=models.SET_NULL, null=False)
-🧠 Learn more: Django Models
+```
 
-🛠️ Step 2: Create Serializers
-In serializers.py:
+Fixa't com estem definint els diferents camps que representen el model i les relacions entre ells. Revisa l'ajuda de [DJango Models](https://docs.djangoproject.com/en/5.2/topics/db/models/) per clarificar els dubtes que et sorgeixin.
 
-python
-Copia
-Modifica
+Genera una nova migració per poder actualitzar la base de dades:
+
+```bash
+poetry run python manage.py makemigration
+```
+
+Revisa la carpeta de **migracions** per assegurar que s'ha generat una nova migració, i revisa que realment s'estan creant dos models nous.
+
+
+Finalment, aplica la migració a la base de dades:
+
+```bash
+poetry run python manage.py migrate
+```
+
+**Nota:** En aquest moment has de tenir creat ja el fitxer de la base de dades SQLite. Intenta visualitzar-lo per assegurar que totes les taules estan creades.
+
+
+Si us fixeu en els models, hem definit un jugador (Player) amb una relació 1 a 1 amb usuari (User). Per assegurar que cada cop que es crei un nou usuari se li assigni la seva informació de jugador, utilitzarem els **senyals**. 
+
+Obre el fitxer ```signals.py``` i afegeix el següent contingut (crea el fitxer si no existeix):
+
+```python
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
+from django.dispatch import receiver
+from .models import Player
+
+@receiver(post_save, sender=User)
+def create_player(sender, instance, created, **kwargs):
+    if created:
+        Player.objects.create(user=instance, nickname=instance.username)
+
+```
+
+Ara caldrà registra aquest senyal en la nostra aplicació. Obre el fitxer ```apps.py``` i afegeix el següent codi:
+
+```python
+def ready(self):
+    import your_app_name.signals
+```
+
+A partir d'ara, cada cop que es crei un usuari nou, se li crearà automàticament un registre de jugador.
+
+
+### Exercici 4
+
+Un cop tenim els models, ara necessitem definir els seus serialitzadors. Això ens permetrà passar d'una representació en JSON a una instància del mòdel. Aquesta traducció s'utilitza tant quan rebem dades a través de l'API i les volem guardar a la base de dades (JSON -> DB) com quan necessitem enviar dades com a resultat d'una consulta a l'API (DB -> JSON). Afegeix el següent codi al fitxer ```serializers.py```:
+
+```python
 from rest_framework import serializers
 from .models import Player, Game
 
@@ -142,35 +254,26 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = '__all__'
-📚 Learn more: DRF Serializers
 
-🔐 Step 3: Custom Permissions
-Create permissions.py:
+```
 
-python
-Copia
-Modifica
-from rest_framework import permissions
+En aquest codi teniu un exemple de com definir un serializador per defecte per a un model, i com modificar el comportament afegint, per exemple, un camp de només lectura. Revisa la documentació dels [Serialitzadors a DRF](https://www.django-rest-framework.org/api-guide/serializers/).
 
-class IsOwnerOrReadOnly(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return obj.owner.user == request.user
-🔧 Step 4: Views with Custom Actions
-In views.py:
+### Exercici 5
 
-python
-Copia
-Modifica
-from rest_framework import viewsets, permissions, filters, status
+Finalment, volem afegir els mètodes per interactuar amb aquests models via API. 
+
+
+Afegeix el següent codi al fitxer ```views.py```:
+
+```python
+from rest_framework import viewsets, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
 from .models import Player, Game
 from .serializers import PlayerSerializer, GameSerializer
-from .permissions import IsOwnerOrReadOnly
 
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
@@ -180,42 +283,23 @@ class PlayerViewSet(viewsets.ModelViewSet):
 
 class GameViewSet(viewsets.ModelViewSet):
     queryset = Game.objects.all()
-    serializer_class = GameSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    serializer_class = GameSerializer    
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['phase']
     ordering_fields = ['id']
 
     def perform_create(self, serializer):
-        player = get_object_or_404(Player, user=self.request.user)
+        player = get_object_or_404(models.Player, user=User.objects.first())
         serializer.save(owner=player)
+```
 
-    @action(detail=True, methods=['post'])
-    def join(self, request, pk=None):
-        game = self.get_object()
-        player = get_object_or_404(Player, user=request.user)
-        if game.players.filter(id=player.id).exists():
-            return Response({'detail': 'Already joined.'}, status=status.HTTP_400_BAD_REQUEST)
-        game.players.add(player)
-        return Response({'detail': 'Joined game.'})
+Fixeu-vos com podem modificar el comportament per defecte, per exemple afegint el propietari d'una partida a partir dels usuaris a la base de dades. Reviseu la documentació sobre la definició de [vistes a DRF](https://www.django-rest-framework.org/api-guide/viewsets/). Fixeu-vos en les opcions que es passen a la creació de les vistes i intenteu modificar-les per veure'n l'efecte.  
 
-    @action(detail=True, methods=['post'])
-    def start(self, request, pk=None):
-        game = self.get_object()
-        player = get_object_or_404(Player, user=request.user)
-        if game.owner != player:
-            return Response({'detail': 'Only the owner can start the game.'}, status=status.HTTP_403_FORBIDDEN)
-        game.phase = Game.PHASE_PLACEMENT
-        game.save()
-        return Response({'detail': 'Game started!'})
-📚 Learn more: DRF ViewSets
+### Exercici 6
 
-🧭 Step 5: URLs and Routing
-In urls.py (app-level):
+L'últim pas és mapejar aquestes noves vistes a les URL corresponents. Per fer-ho, caldrà definir un enrutador. Afegeix el següent codi al fitxer ```urls.py```:
 
-python
-Copia
-Modifica
+```python
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import PlayerViewSet, GameViewSet
@@ -227,69 +311,16 @@ router.register(r'games', GameViewSet)
 urlpatterns = [
     path('', include(router.urls)),
 ]
-In urls.py (project-level):
 
-python
-Copia
-Modifica
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include('your_app_name.urls')),
-]
-📚 Learn more: DRF Routers
+```
 
-🧙 Step 6: Automatically Create Player on User Signup
-In signals.py (create it if it doesn’t exist):
+## Tasques fora del laboratori
 
-python
-Copia
-Modifica
-from django.db.models.signals import post_save
-from django.contrib.auth.models import User
-from django.dispatch import receiver
-from .models import Player
+### Exercici 7
 
-@receiver(post_save, sender=User)
-def create_player(sender, instance, created, **kwargs):
-    if created:
-        Player.objects.create(user=instance, nickname=instance.username)
-Register the signal in apps.py:
+Crea els models per a la resta d'entitats del diagrama ER.
 
-python
-Copia
-Modifica
-def ready(self):
-    import your_app_name.signals
-📚 Learn more: Django Signals
+### Exercici 8
 
-⚙️ Step 7: DRF Settings (Optional but Recommended)
-In settings.py:
+Defineix els serialitzadors i vistes per a gestionar els models.
 
-python
-Copia
-Modifica
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 10,
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ],
-    'DEFAULT_FILTER_BACKENDS': [
-        'rest_framework.filters.SearchFilter',
-        'rest_framework.filters.OrderingFilter',
-    ]
-}
-✅ Endpoints Summary
-Method	Endpoint	Description
-GET	/api/players/	List all players
-POST	/api/games/	Create a game (auto set owner)
-POST	/api/games/{id}/join/	Join a game
-POST	/api/games/{id}/start/	Start a game
-🧪 Final Steps
-bash
-Copia
-Modifica
-python manage.py makemigrations
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
