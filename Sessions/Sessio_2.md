@@ -93,6 +93,12 @@ Tota la gestió de les dades es farà utilitzant l'API RESTful, seguint com a ba
 
 | Mètode | URL                                                 | Descripció                   |
 | ------ | --------------------------------------------------- | ---------------------------- |
+| GET    | `/api/v1/players/`                                    | Llistat de jugadors          |
+| POST   | `/api/v1/players/`                                    | Crear un jugador            |
+| GET    | `/api/v1/players/{id}/`                               | Veure la informació d'un jugador        |
+| PUT    | `/api/v1/players/{id}/`                               | Modificar la informació d'un jugador    |
+| PATCH  | `/api/v1/players/{id}/`                               | Modificar la informació d'un jugador   |
+| DELETE | `/api/v1/players/{id}/`                               | Eliminar un jugador         |
 | GET    | `/api/v1/games/`                                    | Llistat de partides          |
 | POST   | `/api/v1/games/`                                    | Crear una partida            |
 | GET    | `/api/v1/games/{id}/`                               | Veure la informació d'una partida        |
@@ -185,7 +191,7 @@ class Game(models.Model):
     turn = models.ForeignKey(Player, related_name="turn", on_delete=models.SET_NULL, blank=True, null=True)
     phase = models.CharField(max_length=15, choices=PHASE_CHOICES.items(), default=PHASE_WAITING)
     winner = models.ForeignKey(Player, related_name="winner", on_delete=models.SET_NULL, blank=True, null=True)
-    owner = models.ForeignKey(Player, related_name="owner", on_delete=models.SET_NULL, null=False)
+    owner = models.ForeignKey(Player, related_name="owner", on_delete=models.SET_NULL, null=True)
 ```
 
 Fixa't com estem definint els diferents camps que representen el model i les relacions entre ells. Revisa l'ajuda de [DJango Models](https://docs.djangoproject.com/en/5.2/topics/db/models/) per clarificar els dubtes que et sorgeixin.
@@ -193,7 +199,7 @@ Fixa't com estem definint els diferents camps que representen el model i les rel
 Genera una nova migració per poder actualitzar la base de dades:
 
 ```bash
-poetry run python manage.py makemigration
+poetry run python manage.py makemigrations
 ```
 
 Revisa la carpeta de **migracions** per assegurar que s'ha generat una nova migració, i revisa que realment s'estan creant dos models nous.
@@ -228,8 +234,12 @@ def create_player(sender, instance, created, **kwargs):
 Ara caldrà registra aquest senyal en la nostra aplicació. Obre el fitxer ```apps.py``` i afegeix el següent codi:
 
 ```python
-def ready(self):
-    import your_app_name.signals
+class ApiConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'battleship.api'
+
+    def ready(self):
+        import battleship.api.signals
 ```
 
 A partir d'ara, cada cop que es crei un usuari nou, se li crearà automàticament un registre de jugador.
@@ -313,6 +323,8 @@ urlpatterns = [
 ]
 
 ```
+
+En el cas dels recursos aniuats (players dins de games, per exemple), cal utilitzar un enrutador (router) aniuat. Seguiu l'exemple de la [següent guia](https://medium.com/@sunilnepali844/nested-routers-in-django-rest-framework-7d6a5a1cc8f0), tenint en compte que els paquests necessaris ja els teniu instal·lats en el codi proporcionat.
 
 ## Tasques fora del laboratori
 
