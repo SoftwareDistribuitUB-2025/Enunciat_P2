@@ -40,8 +40,7 @@ title: Diagrama ER per gestionar les partides
 ---
 erDiagram
     User 1 to 1 Player: is
-    Player {
-        int userId
+    Player {        
         string nickname
     }
     Game {
@@ -57,14 +56,12 @@ erDiagram
     Player }|--|{ Game : play
     Board {
         int boardId
-        int playerId
-        int gameId        
+        bool prepared        
     }
     Board ||--o{ BoardVessel : contains
+    Player 1 to one or more Board: own
     Game 1 to one or more Board: have
-    BoardVessel {
-        int vesselType
-        int boardId
+    BoardVessel {        
         int vesselId
         int ri
         int ci
@@ -77,13 +74,10 @@ erDiagram
     Shot 1 to 1 BoardVessel: impact
     Board 1 to many Shot: modify
     Vessel 1 to many BoardVessel: of_type
-    Shot {
-        int gameId
-        int playerId
+    Shot {        
         int row
         int col
-        int result
-        int vesselId        
+        int result        
     }
     Vessel {
         int size
