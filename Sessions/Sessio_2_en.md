@@ -1,42 +1,38 @@
-# Sessió 1
+# Session 2
 
-En aquesta sessió veurem les tecnologíes bàsiques amb les que treballarem durant aquesta pràctica.
+In this session, we will review the basic technologies we will work with during this practice.
 
-## Objectius
+## Objectives
 
-- Creació d'un projecte amb [DJango](https://www.djangoproject.com/) [Backend]
-- Creació d'un projecte amb [Vue](https://vuejs.org/) [Frontend]
-- Revisió i posada en marxa del codi bàsic de la pràctica
+- Create a project with [DJango](https://www.djangoproject.com/) [Backend]
+- Create a project with [Vue](https://vuejs.org/) [Frontend]
+- Review and start up the basic code for the practice
 
-## Introducció al Backend
+## Introduction to the Backend
 
-El backend el definirem amb el framework [DJango](https://www.djangoproject.com/) de Python, el qual ens permet el
-desenvolupament ràpid d'aplicacions web, incorporant mòduls per afegir funcionalitats. En el nostre cas, els principals
-mòduls que incorporarem seran:
-* [DJango Auth](https://docs.djangoproject.com/en/5.1/topics/auth/): És el sistema d'autenticació per defecte de DJango. Ens proporciona el model de l'usuari **User**, a més de mecanismes d'autenticació i autorització.
-* [DJango Rest Framework](https://www.django-rest-framework.org/): És un framework que permet crear de forma fàcil una API Rest.
-* [drf-spectacular](https://drf-spectacular.readthedocs.io/en/latest/): És un mòdul que ens permetrà generar automàticament l'ajuda de l'API.
+We will define the backend using the [DJango](https://www.djangoproject.com/) framework from Python, which allows rapid development of web applications by incorporating modules to add functionalities. In our case, the main modules we will incorporate are:
+* [DJango Auth](https://docs.djangoproject.com/en/5.1/topics/auth/): Django's default authentication system. It provides the **User** model, along with authentication and authorization mechanisms.
+* [DJango Rest Framework](https://www.django-rest-framework.org/): A framework that easily enables the creation of a Rest API.
+* [drf-spectacular](https://drf-spectacular.readthedocs.io/en/latest/): A module that will allow us to automatically generate the API documentation.
 
 
-### Models de dades
+### Data Models
 
-Una part important del backend seran els models de dades que utilitzarem per gestionar tota la informació. A continuació us presentem
-el diagrama ER dels principals models que utilitzarem en aquesta pràctica. La gestió dels models el farem utilitzant
-el sistema ORM (Object Relational mapping) de Django, basats en la classe [Model de DJango](https://docs.djangoproject.com/en/5.1/topics/db/models/). 
-A continuació us expliquem breument els diferents models que utilitzarem. 
+An important part of the backend will be the data models we will use to manage all the information. Below we present the ER diagram of the main models we will use in this practice. Model management will be handled using Django's ORM (Object Relational Mapping) system, based on the [Django Model class](https://docs.djangoproject.com/en/5.1/topics/db/models/).
+Next, we briefly explain the different models we will use.
 
-* **User:** És el [model que DJango](https://docs.djangoproject.com/en/5.1/topics/auth/default/) utilitza per representar els usuaris de l'aplicació. Veurem aquest model amb més detall quan parlem d'autenticació.
-* **Player:** Aquest model representa un jugador, i ens permet afegir informació addicional a la bàsica d'un Usuari. Quedarà vinculada amb una relació 
-* **Game:** És una partida, a la qual podrem assignar un o més jugadors. Guardarà l'estat i les dades de la partida.
-* **Board:** Representa un tauler. Pertany a una partida i a un jugador.
-* **Shot:** Guarda les tirades d'un jugador a una partida.
-* **Vessel:** Guarda els vaixells que s'han ubicat a un tauler (Board).
+* **User:** The [default model in Django](https://docs.djangoproject.com/en/5.1/topics/auth/default/) representing application users. We will see this model in more detail when we discuss authentication.
+* **Player:** This model represents a player, allowing us to add additional information to a basic User. It will be linked through a relation.
+* **Game:** Represents a game session, to which one or more players can be assigned. It stores the state and data of the game.
+* **Board:** Represents a board. It belongs to a game and to a player.
+* **Shot:** Stores the shots made by a player in a game.
+* **Vessel:** Stores the ships that have been placed on a board.
 
-Cal tenir en compte que el diagrama ER mostra només els camps principals, alguns dels quals pot ser que calgui gestionar-los via relacions entre les entitats.
+Note that the ER diagram only shows the main fields, some of which might need to be managed through relationships between entities.
 
 ```mermaid
 ---
-title: Diagrama ER per gestionar les partides
+title: ER Diagram for Game Management
 ---
 erDiagram
     User 1 to 1 Player: is
@@ -86,10 +82,76 @@ erDiagram
     }
 ```
 
-# Step by step guide
+### API
 
-## 🧱 Step 1: Define Your Models
-Inside `models.py`:
+All data management will be done using the RESTful API, following the base structure below (**you can add** additional methods):
+
+| Method | URL                                                 | Description                  |
+| ------ | --------------------------------------------------- | ---------------------------- |
+| GET    | `/api/v1/players/`                                    | List of players              |
+| POST   | `/api/v1/players/`                                    | Create a player              |
+| GET    | `/api/v1/players/{id}/`                               | View player information      |
+| PUT    | `/api/v1/players/{id}/`                               | Modify player information    |
+| PATCH  | `/api/v1/players/{id}/`                               | Modify player information    |
+| DELETE | `/api/v1/players/{id}/`                               | Delete a player              |
+| GET    | `/api/v1/games/`                                      | List of games                |
+| POST   | `/api/v1/games/`                                      | Create a game                |
+| GET    | `/api/v1/games/{id}/`                                 | View game information        |
+| PUT    | `/api/v1/games/{id}/`                                 | Modify game information      |
+| PATCH  | `/api/v1/games/{id}/`                                 | Modify game information      |
+| DELETE | `/api/v1/games/{id}/`                                 | Delete a game                |
+| GET    | `/api/v1/games/{id}/players/`                         | List of players in a game    |
+| POST   | `/api/v1/games/{id}/players/`                         | Add a player to a game       |
+| GET    | `/api/v1/games/{gid}/players/{pid}/`                  | View a player's game data    |
+| DELETE | `/api/v1/games/{gid}/players/{pid}/`                  | Remove a player from a game  |
+| GET    | `/api/v1/games/{gid}/players/{pid}/vessels/`          | View a user's vessels in a game |
+| POST   | `/api/v1/games/{gid}/players/{pid}/vessels/`          | Add a vessel for a user and game |
+| GET    | `/api/v1/games/{gid}/players/{pid}/vessels/{vid}/`    | View vessel information for a user and game |
+| PUT    | `/api/v1/games/{gid}/players/{pid}/vessels/{vid}/`    | Modify a vessel's location for a user and game |
+| PATCH  | `/api/v1/games/{gid}/players/{pid}/vessels/{vid}/`    | Modify a vessel's location for a user and game |
+| DELETE | `/api/v1/games/{gid}/players/{pid}/vessels/{vid}/`    | Delete a vessel from a user's board for a game |
+| GET    | `/api/v1/games/{gid}/players/{pid}/shots/`            | View a player's shots in a game |
+| POST   | `/api/v1/games/{gid}/players/{pid}/shots/`            | Make a new shot for a player in a game |
+| GET    | `/api/v1/games/{gid}/players/{pid}/shots/{sid}/`      | View shot information for a player and game |
+| GET    | `/api/v1/games/{gid}/players/{pid}/boards/`           | View a player's game boards |
+| GET    | `/api/v1/games/{gid}/players/{pid}/boards/{bid}/`     | View a player's specific board in a game |
+
+The message bodies and return types should be decided by you and must be documented in the API documentation and the **report**.
+
+**Note:** At this point, the API will allow us to perform all actions regardless of authentication and user permissions. We will address authentication and authorization later.
+
+## Laboratory Tasks
+
+### Exercise 1
+
+Follow the link to **Github Classroom** and download the code for Practice 2.
+
+- [https://classroom.github.com/a/diHjdyim](https://classroom.github.com/a/diHjdyim)
+
+You will find two folders:
+
+- **frontend**: Initial version of the frontend. This code is based on a version similar to that obtained in the previous session's exercises but includes some pre-implemented components.
+
+- **backend**: Initial version of the backend. This code is based on a version similar to that obtained in the previous session's exercises but includes some packages and initial configurations.
+
+Run both codes the same way you did in the previous session.
+
+### Exercise 2
+
+Open the **backend** code and review its structure. Notice that there is a ***api** folder. This is where we want to put all API-related backend parts. In particular, identify the following structure:
+
+| Component        | Purpose                                    |
+| ---------------- | ------------------------------------------ |
+| `models.py`      | Defines the database schema               |
+| `migrations`     | Package where database migrations are created |
+| `serializers.py` | Translates models <-> JSON data            |
+| `views.py`       | Defines the views implementing the API logic |
+| `urls.py`        | Maps API routes to views                  |
+| `signals.py`     | Registers signals/events                 |
+
+### Exercise 3
+
+The first thing we want to do is define the **Player** and **Game** models as represented in the previous data model. To do this, open the `models.py` file inside the **api** folder and add the following content:
 
 ```python
 from django.db import models
@@ -119,13 +181,57 @@ class Game(models.Model):
     turn = models.ForeignKey(Player, related_name="turn", on_delete=models.SET_NULL, blank=True, null=True)
     phase = models.CharField(max_length=15, choices=PHASE_CHOICES.items(), default=PHASE_WAITING)
     winner = models.ForeignKey(Player, related_name="winner", on_delete=models.SET_NULL, blank=True, null=True)
-    owner = models.ForeignKey(Player, related_name="owner", on_delete=models.SET_NULL, null=False)
+    owner = models.ForeignKey(Player, related_name="owner", on_delete=models.SET_NULL, null=True)
 ```
-🧠 Learn more: [Django Models](https://docs.djangoproject.com/en/stable/topics/db/models/)
 
-## 🛠️ Step 2: Create Serializers
+Now generate a new migration to update the database:
 
-In `serializers.py`:
+```bash
+poetry run python manage.py makemigrations
+```
+
+Check the **migrations** folder to ensure a new migration has been generated, and verify that two new models are being created.
+
+Finally, apply the migration to the database:
+
+```bash
+poetry run python manage.py migrate
+```
+
+**Note:** At this point, you should already have the SQLite database file created. Try to view it to ensure that all tables have been created.
+
+If you look at the models, we have defined a player (Player) with a one-to-one relation with a user (User). To ensure that each time a new user is created, a player record is also created, we will use **signals**.
+
+Open the `signals.py` file and add the following content (create the file if it does not exist):
+
+```python
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
+from django.dispatch import receiver
+from .models import Player
+
+@receiver(post_save, sender=User)
+def create_player(sender, instance, created, **kwargs):
+    if created:
+        Player.objects.create(user=instance, nickname=instance.username)
+```
+
+Now, register this signal in our application. Open the `apps.py` file and add:
+
+```python
+class ApiConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'battleship.api'
+
+    def ready(self):
+        import battleship.api.signals
+```
+
+From now on, every time a new user is created, a player record will be automatically created.
+
+### Exercise 4
+
+Once we have the models, we need to define their serializers. This will allow us to move between JSON and model instances. Add the following code to `serializers.py`:
 
 ```python
 from rest_framework import serializers
@@ -144,35 +250,20 @@ class GameSerializer(serializers.ModelSerializer):
         fields = '__all__'
 ```
 
-📚 Learn more: [DRF Serializers](https://www.django-rest-framework.org/api-guide/serializers/)
+### Exercise 5
 
-## 🔐 Step 3: Custom Permissions
+Now we want to add the methods to interact with these models via API.
 
-Create `permissions.py`:
-
-```python
-from rest_framework import permissions
-
-class IsOwnerOrReadOnly(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return obj.owner.user == request.user
-```
-
-## 🔧 Step 4: Views with Custom Actions
-
-In views.py:
+Add the following to `views.py`:
 
 ```python
-from rest_framework import viewsets, permissions, filters, status
+from rest_framework import viewsets, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
 from .models import Player, Game
 from .serializers import PlayerSerializer, GameSerializer
-from .permissions import IsOwnerOrReadOnly
 
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
@@ -182,39 +273,19 @@ class PlayerViewSet(viewsets.ModelViewSet):
 
 class GameViewSet(viewsets.ModelViewSet):
     queryset = Game.objects.all()
-    serializer_class = GameSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    serializer_class = GameSerializer    
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['phase']
     ordering_fields = ['id']
 
     def perform_create(self, serializer):
-        player = get_object_or_404(Player, user=self.request.user)
+        player = get_object_or_404(models.Player, user=User.objects.first())
         serializer.save(owner=player)
-
-    @action(detail=True, methods=['post'])
-    def join(self, request, pk=None):
-        game = self.get_object()
-        player = get_object_or_404(Player, user=request.user)
-        if game.players.filter(id=player.id).exists():
-            return Response({'detail': 'Already joined.'}, status=status.HTTP_400_BAD_REQUEST)
-        game.players.add(player)
-        return Response({'detail': 'Joined game.'})
-
-    @action(detail=True, methods=['post'])
-    def start(self, request, pk=None):
-        game = self.get_object()
-        player = get_object_or_404(Player, user=request.user)
-        if game.owner != player:
-            return Response({'detail': 'Only the owner can start the game.'}, status=status.HTTP_403_FORBIDDEN)
-        game.phase = Game.PHASE_PLACEMENT
-        game.save()
-        return Response({'detail': 'Game started!'})
 ```
-📚 Learn more: [DRF ViewSets](https://www.django-rest-framework.org/api-guide/viewsets/)
 
-## 🧭 Step 5: URLs and Routing
-In `urls.py` (API app-level):
+### Exercise 6
+
+The last step is to map these new views to their corresponding URLs. Add the following to `urls.py`:
 
 ```python
 from django.urls import path, include
@@ -222,79 +293,22 @@ from rest_framework.routers import DefaultRouter
 from .views import PlayerViewSet, GameViewSet
 
 router = DefaultRouter()
-router.register(r'player', PlayerViewSet)
-router.register(r'game', GameViewSet)
+router.register(r'players', PlayerViewSet)
+router.register(r'games', GameViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
 ]
 ```
 
-📚 Learn more: [DRF Routers](https://www.django-rest-framework.org/api-guide/routers/)
+For nested resources (e.g., players inside games), you must use a nested router. Follow the example from [this guide](https://medium.com/@sunilnepali844/nested-routers-in-django-rest-framework-7d6a5a1cc8f0), keeping in mind that the necessary packages are already installed in the provided code.
 
-## 🧙 Step 6: Automatically Create Player on User Signup
+## Tasks outside the laboratory
 
-In `signals.py` (create it if it doesn’t exist):
+### Exercise 7
 
-```python
-from django.db.models.signals import post_save
-from django.contrib.auth.models import User
-from django.dispatch import receiver
-from .models import Player
+Create the models for the remaining entities from the ER diagram.
 
-@receiver(post_save, sender=User)
-def create_player(sender, instance, created, **kwargs):
-    if created:
-        Player.objects.create(user=instance, nickname=instance.username)
-```
+### Exercise 8
 
-Register the signal in `apps.py`:
-
-```python
-from django.apps import AppConfig
-
-
-class ApiConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'battleship.api'
-
-    def ready(self):
-        import battleship.api.signals
-```
-
-📚 Learn more: [Django Signals](https://docs.djangoproject.com/en/stable/topics/signals/)
-
-## ⚙️ Step 7: DRF Settings (Optional but Recommended)
-In settings.py:
-
-```python
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 10,
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ],
-    'DEFAULT_FILTER_BACKENDS': [
-        'rest_framework.filters.SearchFilter',
-        'rest_framework.filters.OrderingFilter',
-    ]
-}
-```
-
-## ✅ Endpoints Summary
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-|GET  |	/api/players/|	List all players|
-|POST |	/api/games/	| Create a game (auto set owner)|
-|POST |	/api/games/{id}/join/ | Join a game|
-|POST |	/api/games/{id}/start/ | Start a game|
-
-## 🧪 Final Steps
-
-```bash
-poetry run python manage.py makemigrations
-poetry run python manage.py migrate
-poetry run python manage.py createsuperuser
-poetry run python manage.py runserver
-```
+Define the serializers and views to manage the models.
