@@ -47,6 +47,8 @@ The structure of the frontend project is as follows (you can skip this part now 
 └── vite.config.js -> Vite configuration file
 ```
 
+![image](images/3/frontendDiagram.png)
+
 ### How to run the frontend
 
 1. Copy the `env_sample` file to `.env`
