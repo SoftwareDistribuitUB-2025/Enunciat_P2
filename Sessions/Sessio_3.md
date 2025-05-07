@@ -47,6 +47,8 @@ L'estructura del projecte frontend és la següent (pots saltar-te aquesta part 
 └── vite.config.js -> Fitxer de configuració de Vite
 ```
 
+![image](images/3/frontendDiagram.png)
+
 ### Com executar el frontend
 
 1. Copia el fitxer env_sample a .env
