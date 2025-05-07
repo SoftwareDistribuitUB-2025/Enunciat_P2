@@ -216,7 +216,7 @@ Note that we are directly accessing the `playersList` state variable from the `a
 
 ## Work outside the class
 
-- Check the board representation shown in [Frontend Board Representation](https://github.com/SoftwareDistribuitUB-2025/PR2/tree/main/frontend)
+- Check the board representation shown in `frontend/README.md` in the starting template for PR2.
 
 - As you progress implementing the API backend for the gameplay, replace the simulated API calls in the `services/api.js` file with the actual API calls to the backend. This will allow you to test the API calls and the game logic together.
 

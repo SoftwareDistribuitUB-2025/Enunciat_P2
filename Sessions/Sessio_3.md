@@ -2,7 +2,7 @@
 
 ## Objectius
 
-- Entendre l'estructura del Frontend  
+- Entendre l'estructura del Frontend
 - Aprendre a connectar el frontend amb el backend mitjançant l'API
 
 ## Introducció al Frontend
@@ -53,15 +53,18 @@ L'estructura del projecte frontend és la següent (pots saltar-te aquesta part 
 
 1. Copia el fitxer env_sample a .env
 2. Instal·la les dependències utilitzant npm:
+
 ```bash
 npm install
 ```
+
 3. Executa el servidor de desenvolupament:
+
 ```bash
 npm run dev
 ```
-4. Obre el navegador i ves a l'adreça `http://localhost:5173/` per veure l'aplicació en funcionament.
 
+4. Obre el navegador i ves a l'adreça `http://localhost:5173/` per veure l'aplicació en funcionament.
 
 ## Exercici 1: Preparació del backend
 
@@ -79,6 +82,7 @@ class UserSerializer(serializers.ModelSerializer):
 ```
 
 2. Afegeix a `views.py`
+
 ```python
 from .serializers import PlayerSerializer, GameSerializer, UserSerializer
 from django.contrib.auth.models import User
@@ -96,9 +100,9 @@ class UserViewSet(viewsets.ModelViewSet):
 router.register(r'user', UserViewSet)
 ```
 
-4. Comprova que l’endpoint funciona obrint l'adreça `http://localhost:8000/api/v1/user/` al navegador. Hauries de veure una llista de tots els usuaris. 
+4. Comprova que l’endpoint funciona obrint l'adreça `http://localhost:8000/api/v1/user/` al navegador. Hauries de veure una llista de tots els usuaris.
 
-   __NOTA:__ potser necessitaràs crear alguns usuaris al panell d’administració de Django o utilitzant la shell de Django. Pots crear un superusuari amb la comanda següent:
+   **NOTA:** potser necessitaràs crear alguns usuaris al panell d’administració de Django o utilitzant la shell de Django. Pots crear un superusuari amb la comanda següent:
 
    ```bash
    python manage.py createsuperuser
@@ -154,19 +158,19 @@ Després, fem servir el mètode `get()` de la instància `axios` per fer una cri
 
    Afegim ara el mètode `getAllPlayers()` al fitxer `authStore.js`, dins de l’**store** `authStore`, que utilitza el mètode anterior amb el mateix nom:
 
-    ```javascript
-    state: () => ({
-        username: null,
-        accessToken: null,
-        refreshToken: null,
-        isAuthenticated: false,
-        loading: false,
-        error: null,
-        playersList: [],  // <- Afegeix aquesta línia
-      }),
-    ```
+   ```javascript
+   state: () => ({
+       username: null,
+       accessToken: null,
+       refreshToken: null,
+       isAuthenticated: false,
+       loading: false,
+       error: null,
+       playersList: [],  // <- Afegeix aquesta línia
+     }),
+   ```
 
-  llavors, dins de l'apartat `actions`:
+llavors, dins de l'apartat `actions`:
 
 ```javascript
 async getAllPlayers() {
@@ -184,8 +188,6 @@ async getAllPlayers() {
       }
     },
 ```
-
-Aquí tens la traducció al català del text:
 
 3. Els **components** són les peces fonamentals de l’aplicació **frontend**. Ja tens la lògica del joc i la interfície d’usuari implementades, però actualment, les crides a l’API estan simulades al fitxer `services/api.js`. Ara modificarem el component `Home.vue` per visualitzar la llista de jugadors:
 
@@ -220,9 +222,9 @@ Tingues en compte que estem accedint directament a la variable d’estat `player
 
 ## Treball fora del laboratori
 
-* Consulta la representació del tauler mostrada a [Representació del Tauler al Frontend](https://github.com/SoftwareDistribuitUB-2025/PR2/tree/main/frontend)
+- Consulta la representació del tauler que es mostra a `frontend/README.md` a la plantilla inicial de la PR2.
 
-* A mesura que avancis en la implementació de l’API del backend per a la jugabilitat, substitueix les crides simulades a l’API al fitxer `services/api.js` per les crides reals al backend. Això et permetrà provar conjuntament les crides a l’API i la lògica del joc.
+- A mesura que avancis en la implementació de l’API del backend per a la jugabilitat, substitueix les crides simulades a l’API al fitxer `services/api.js` per les crides reals al backend. Això et permetrà provar conjuntament les crides a l’API i la lògica del joc.
 
   Per exemple, el mètode `getGameState()` al fitxer `api.js` està programat per retornar un estat de joc simulat. Hauràs de substituir-lo per la crida real a l’API del backend per obtenir l’estat del joc:
 
