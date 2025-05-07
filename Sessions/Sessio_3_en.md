@@ -3,7 +3,7 @@
 ## Objectives
 
 - Understand the Frontend structure
-- Implement a simple API call from Vue to Django Rest Framework
+- Learn how to connect the frontend with the backend API
 
 ## Introduction to the Frontend
 
