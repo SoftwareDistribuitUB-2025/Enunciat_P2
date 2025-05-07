@@ -63,7 +63,7 @@ The work will follow the same method as in Practice 1, using a `GitHub Classroom
 | ------- | ----------------- | ---------------------------------------- | ------------------------------------ | --------------------------------------------------------------------------------- |
 | 1       | 02/04/25          | Local deployment of backend and frontend | [Session 1](Sessions/Sessio_1_en.md) | [Intro to Vue](Guies/inici_Vue_en.md) [Intro to Django](Guies/inici_DJanog_en.md) |
 | 2       | 23/04/25-30/04/25 | Backend and database                     |                                      |                                                                                   |
-| 3       | 07/05/25          | **Quiz 2** and Frontend                  |                                      |                                                                                   |
+| 3       | 07/05/25          | **Quiz 2** and Frontend                  | [Sessió 3](Sessions/Sessio_3_en.md)  |                                                                                   |
 | 4       | 14/05/25          | Authentication and authorization         |                                      |                                                                                   |
 | 5       | 21/05/25          | Leaderboard                              |                                      |                                                                                   |
 | 6       | 28/05/25          | Testing Session                          |                                      |                                                                                   |
