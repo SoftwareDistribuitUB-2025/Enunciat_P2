@@ -176,6 +176,13 @@ Let's break it down:
   }
 ```
 
+Then, in `services/api.js`, we can import the `auth.js` service and get the axios instance, which we can use to make API calls for the game logic:
+
+```javascript
+import AuthService from "@/services/auth.js";
+const axiosInstance = AuthService.getAxiosInstance();
+```
+
 ## Outside of the lab
 
 ### Registration
@@ -188,3 +195,7 @@ Let's break it down:
   - Email
 - The registration form should validate the fields and show an error message if the fields are not valid.
 - Implement the registration function in the `auth.js` service to make a POST request to the `/api/v1/users/` endpoint with the user data.
+
+```
+
+```
