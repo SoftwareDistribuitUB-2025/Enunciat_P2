@@ -195,7 +195,3 @@ const axiosInstance = AuthService.getAxiosInstance();
   - Email
 - The registration form should validate the fields and show an error message if the fields are not valid.
 - Implement the registration function in the `auth.js` service to make a POST request to the `/api/v1/users/` endpoint with the user data.
-
-```
-
-```
