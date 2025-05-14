@@ -168,7 +168,7 @@ Let's break it down:
 - If the refresh is successful, we update the access token in the local storage and set the `Authorization` header in the request config.
 - Finally, we return the request with the updated config. If the refresh fails, we call the `logout` function to log the user out.
 - Now, we can make requests to the backend without having to set the token in each request. The axios instance will automatically add the token to each request.
-- We can also use the `getAxiosInstance()` function to make requests to the backend. For example, we can use it in the `getAllPlayers()` function as follows:
+- We can also use the `getAxiosInstance()` function to make requests to the backend. For example, in the `getAllPlayers()` function we can go back to use the calls as follows:
 
 ```javascript
   getAllPlayers() {
