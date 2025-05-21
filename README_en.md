@@ -62,8 +62,8 @@ The work will follow the same method as in Practice 1, using a `GitHub Classroom
 | Session | Date              | Topic                                    | Guide                                | Links                                                                             |
 | ------- | ----------------- | ---------------------------------------- | ------------------------------------ | --------------------------------------------------------------------------------- |
 | 1       | 02/04/25          | Local deployment of backend and frontend | [Session 1](Sessions/Sessio_1_en.md) | [Intro to Vue](Guies/inici_Vue_en.md) [Intro to Django](Guies/inici_DJanog_en.md) |
-| 2       | 23/04/25-30/04/25 | Backend and database                     | [Sessió 2](Sessions/Sessio_2_en.md)  |                                                                                   |
-| 3       | 07/05/25          | **Quiz 2** and Frontend                  | [Sessió 3](Sessions/Sessio_3_en.md)  |                                                                                   |
-| 4       | 14/05/25          | Authentication and authorization         | [Sessió 4](Sessions/Sessio_4_en.md)  |                                                                                   |
-| 5       | 21/05/25          | Leaderboard                              |                                      |                                                                                   |
+| 2       | 23/04/25-30/04/25 | Backend and database                     | [Session 2](Sessions/Sessio_2_en.md)  |                                                                                   |
+| 3       | 07/05/25          | **Quiz 2** and Frontend                  | [Session 3](Sessions/Sessio_3_en.md)  |                                                                                   |
+| 4       | 14/05/25          | Authentication and authorization         | [Session 4](Sessions/Sessio_4_en.md)  |                                                                                   |
+| 5       | 21/05/25          | Leaderboard                              |     [Session 5](Sessions/Sessio_5_en.  md)                              |                                                                                   |
 | 6       | 28/05/25          | Testing Session                          |                                      |                                                                                   |

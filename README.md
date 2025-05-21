@@ -67,5 +67,5 @@ Es treballarà de la mateixa manera que a la Pràctica 1, utilitzant un reposito
 | 2      | 23/04/25-30/04/25 | Backend i base de dades               | [Sessió 2](Sessions/Sessio_2.md)    |                                                                           |
 | 3      | 07/05/25          | **Qüestionari 2** i Frontend          | [Sessió 3](Sessions/Sessio_3.md) |                                                                           |
 | 4      | 14/05/25          | Autenticació i autorització           |    [Sessió 4](Sessions/Sessio_4.md)    |                                                                    |
-| 5      | 21/05/25          | Taula de lideratge                    |                                     |                                                                           |
+| 5      | 21/05/25          | Taula de lideratge                    |  [Sessió 5](Sessions/Sessio_5.md)                                   |                                                                           |
 | 6      | 28/05/25          | Sessió de Testing                     |                                     |                                                                           |
