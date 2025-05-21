@@ -53,7 +53,6 @@ The line `permission_classes = [permissions.IsAdminUser]` indicates that accessi
 
 Permissions can be combined to create new rules using logical operators like `|` (or), `&` (and), and `~` (not). For example, if we assign `permission_classes = [permissions.IsAdminUser | permissions.ReadOnly]`, we get a permission rule where administrators have full access, and all other users (authenticated or not) only have read access (they won't be allowed to perform POST, PUT, PATCH, or DELETE operations).
 
-
 2. Uncomment the following lines in `battleship/urls.py` to enable JWT authentication:
 
 ```python
@@ -216,6 +215,4 @@ const axiosInstance = AuthService.getAxiosInstance();
 - The registration form should validate the fields and show an error message if the fields are not valid.
 - Implement the registration function in the `auth.js` service to make a POST request to the `/api/v1/users/` endpoint with the user data.
 
-
 > **Note:** When creating users in Django, it is essential to follow best practices to ensure the system’s security and integrity. Passwords must never be stored in plain text; Django provides built-in mechanisms to securely handle passwords using hashing. To properly create users, the `create_user()` method provided by the `UserManager` should be used, as it automatically encrypts the password before saving it to the database. Additionally, to create superusers with administrative privileges, the `create_superuser()` method should be used. Django also offers a comprehensive API for user management, authentication, and permissions through the `django.contrib.auth` module, as detailed in the [official documentation](https://docs.djangoproject.com/en/5.2/ref/contrib/auth/). This API includes functions to authenticate users (`authenticate()`), log them in and out (`login()`, `logout()`), check permissions (`has_perm()`, `has_module_perms()`), and manage password changes and account recovery. Following these practices helps build secure and maintainable applications.
-
