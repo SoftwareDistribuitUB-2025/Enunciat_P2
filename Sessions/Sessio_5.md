@@ -1,20 +1,20 @@
-# Session 5
+# Sessió 5
 
-## Objectives
+## Objectius
 
-* Practice using nested serializers
-* Complete the implementation of the game
+- Practicar en l'ús de serialitzadors imbricats
+- Finalitzar la implementació del joc
 
-## Exercise 1: Game state serialization
+## Exercici 1: Serialització de l'estat de la partida
 
-This guide explains how to create nested serializers in Django REST Framework to generate a complex JSON response for a Battleship game state. The response follows a specific schema that includes game information, player details, and board states as described in the provided JSON example.
+Aquesta guia explica com crear serialitzadors imbricats amb Django REST Framework per generar una resposta JSON complexa per a l'estat d'una partida. La resposta segueix l'esquema que es va donar com a exemple en el frontend, incloent informació de la partida, detalls dels jugadors i els estats dels taulers segons l'exemple JSON proporcionat.
 
-> **⚠️ Disclaimer:**  
-> **This is an example on how to do the nested serializers, adjust to your code as needed!**
+> **⚠️ Avís:**
+> **Aquest és un exemple de com fer els serialitzadors imbricats; adapta'l al teu codi segons sigui necessari!**
 
-### Step 1: Create the Base Structure
+### Pas 1: Crea l’Estructura Base
 
-First, create the outer structure that matches the top-level JSON schema:
+Primer, crea l’estructura externa que coincideixi amb l’esquema JSON de nivell superior:
 
 ```python
 class GameStateResponseSerializer(serializers.Serializer):
@@ -28,12 +28,11 @@ class GameStateResponseSerializer(serializers.Serializer):
         }
 ```
 
-**Note:** Notice that in this case, since it is not a model from the application, we use `Serializer` instead of `ModelSerializer`.
+**Nota:** Fixa't que en aquest cas, al no tractar-se d'un model de l'aplicació, utilitzem Serializer en comptes de ModelSerializer.
 
+### Pas 2: Crea el Serialitzador de l’Estat del Joc
 
-### Step 2: Create the Game State Serializer
-
-This handles the gameState object within data:
+Aquest gestiona l’objecte `gameState` dins de `data`:
 
 ```python
 class GameStateSerializer(serializers.Serializer):
@@ -61,9 +60,9 @@ class GameStateSerializer(serializers.Serializer):
         return PlayerStateSerializer(board).data if board else None
 ```
 
-### Step 3: Create the Player State Serializer
+### Pas 3: Crea el Serialitzador de l’Estat del Jugador
 
-This handles individual player data:
+Aquest gestiona les dades individuals dels jugadors:
 
 ```python
 class PlayerStateSerializer(serializers.Serializer):
@@ -105,24 +104,24 @@ class PlayerStateSerializer(serializers.Serializer):
         size = board.game.width
         grid = [[0 for _ in range(size)] for _ in range(size)]
 
-        # Add vessels
+        # Afegeix els vaixells
         for vessel in BoardVessel.objects.filter(board=board):
-            value = vessel.type.id if vessel.alive else -vessel.type.id
+            value = vessel.type.id si vessel.alive else -vessel.type.id
             for i in range(min(vessel.ri, vessel.rf), max(vessel.ri, vessel.rf) + 1):
                 for j in range(min(vessel.ci, vessel.cf), max(vessel.ci, vessel.cf) + 1):
                     grid[i][j] = value
 
-        # Add shots
+        # Afegeix els trets
         for shot in Shot.objects.filter(board=board):
             if grid[shot.row][shot.col] == 0:
-                grid[shot.row][shot.col] = 11  # Miss
+                grid[shot.row][shot.col] = 11  # Fallat
 
         return grid
 ```
 
-### Step 4: Update the Game Serializer
+### Pas 4: Actualitza el Serialitzador de Partides
 
-Modify your existing GameSerializer to use the new nested structure:
+Modifica el teu `GameSerializer` existent per utilitzar l’estructura imbricada nova:
 
 ```python
 class GameSerializer(serializers.ModelSerializer):
@@ -136,9 +135,9 @@ class GameSerializer(serializers.ModelSerializer):
         return GameStateResponseSerializer(obj, context=self.context).data
 ```
 
-### Step 5: Use in the ViewSet
+### Pas 5: Utilitza-ho al ViewSet
 
-Update your GameViewSet to use the serializer:
+Actualitza el teu `GameViewSet` per utilitzar el serialitzador:
 
 ```python
 class GameViewSet(viewsets.ModelViewSet):
@@ -150,29 +149,29 @@ class GameViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 ```
 
+## Exercici 2: Connectar amb el frontend
 
-## Exercise 2: Connecting to the Frontend
+Un cop teniu el JSON amb l'estat d'una partid de l'exercici 1, ara cal que connecteu el frontend amb aquest estat. Modifica el codi del mètode ```getGameState(gameId)``` de la sessió 3 per tal que en comptes de retornar el JSON d'exemple, ara l'obtingui del backend. 
 
-Once you have the JSON with the game state from Exercise 1, you now need to connect the frontend to this state. Modify the code of the `getGameState(gameId)` method from Session 3 so that instead of returning the example JSON, it fetches it from the backend.
+Comproveu que si modifiqueu les dades de la base de dades l'estat de la partida es veu alterat i representat correctament en el tauler del frontend.
 
-Check that if you change the data in the database, the game state is updated and correctly represented on the frontend board.
+## Exercici 3: Modificació de l'estat de la partida
 
-## Exercise 3: Modifying the Game State
+Un cop el frontend reflecteix l'estat de la partida, ara ens cal connectar les accions de l'usuari amb les crides corresponents al backend. Per exemple, en la fase de posicionament caldrà fer les crides per afegir els vaixells, i en la fase de joc per disparar. 
 
-Once the frontend reflects the game state, we need to connect user actions to the corresponding backend calls. For example, during the setup phase, you’ll need to make requests to add ships, and during the game phase, to fire shots.
 
-## Exercise 4: Refreshing the State
+## Exercici 4: Refrescant l'estat
 
-If you're playing single-player games, you can make the "bot" actions execute directly within the user actions that trigger them. For instance, when a user fires a shot and misses, the bot can make its moves before returning the result. In this way, if you refresh the game state after each action, everything stays in sync.
+Si feu partides d'un sol jugador, podeu fer que les accions del "bot" s'executin directament dins de les accions de l'usuari que les genera. Per exemple, quan un usuari fa una tirada que falla, el bot pot fer les seves tirades abans de retornar el resultat. D'aquesta forma, si després de cada acció refresqueu l'estat de la partida, ja us quedarà tot connectat.
 
-Alternatively, you can create an API action in the backend to perform the bot’s moves, and call it from a button on the frontend. The game state should also be refreshed after calling this action. This option is a bit cleaner than the previous one, as it more accurately simulates a real bot player.
+També podeu crear una acció a l'API del backend per a que faci les accions del bot, i feu la crida a partir d'un botó del frontend. El refresc de l'estat es farà també després de fer la crida a l'acció. Aquesta opció és una mica més neta que l'anterior, ja que simula realment un jugador bot.
 
-Finally, you can have your frontend automatically refresh the game state at regular intervals, so you don’t need to force everything to happen before returning the state. Here's an example of how this can be done:
+Finalment, podeu fer que el vostre frontend es refresqui automàticament cada cert temps, amb el que no cal que forceu a que tot es faci abans de retornar l'estat. Aquí teniu un exemple de com es pot fer:
 
 ```vue
 <template>
   <div>
-    <h2>Game State</h2>
+    <h2>Estat del Joc</h2>
     <pre>{{ gameState }}</pre>
   </div>
 </template>
@@ -189,16 +188,16 @@ export default {
 
     const fetchGameState = async () => {
       try {
-        const response = await axios.get('/api/games/1/') // replace with the correct endpoint
+        const response = await axios.get('/api/games/1/') // substitueix amb l’endpoint correcte
         gameState.value = response.data
       } catch (error) {
-        console.error('Error fetching game state:', error)
+        console.error('Error obtenint l’estat del joc:', error)
       }
     }
 
     onMounted(() => {
       fetchGameState()
-      intervalId = setInterval(fetchGameState, 5000) // refresh every 5 seconds
+      intervalId = setInterval(fetchGameState, 5000) // refresca cada 5 segons
     })
 
     onUnmounted(() => {
@@ -213,16 +212,21 @@ export default {
 </script>
 ```
 
-## Exercise 5: Listing Ongoing Games
+## Exercici 5: Llistat de partides en joc
 
-Add a view in the frontend that displays a list of games that are waiting for players. The user should be able to select a game to join and start playing.
+Afegeix una vista al frontend que mostri la llista de partides que estan esperant jugadors. L'usuari ha de poder triar una partida per afegir-s'hi i començar a jugar.
 
-## Exercise 6: Leaderboard
 
-Add a view in the frontend that displays a list of the top 5 players. For each player, their score should be shown. The score is calculated as the percentage of games won:
+## Exercici 6: Tauler de lideratge
+
+Afegeix una vista al frontend que mostri la llista dels 5 millors jugadors. Per a cada jugador cal que es mostri la seva puntuació. La puntuació es calcula com el percentatge de partides guanyades:
 
 ```
 score = num_winned_games / total_games
 ```
 
-The leaderboard must sort the players by score.
+El tauler ha d'ordenar els jugadors per puntuació.
+
+
+
+
